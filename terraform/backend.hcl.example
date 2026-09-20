@@ -1,0 +1,7 @@
+# Copy to backend.hcl and adjust, then run:
+#   terraform init -backend-config=backend.hcl
+# The bucket must exist before running init (create it once, out of band).
+bucket       = "cornerstone-ca-tfstate-000000000000"
+key          = "terraform.tfstate"
+region       = "us-east-2"
+use_lockfile = true

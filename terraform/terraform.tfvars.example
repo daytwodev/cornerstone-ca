@@ -1,0 +1,11 @@
+aws_region = "us-east-2"
+name       = "cornerstone-ca"
+
+# Must match the CLI --key-id default: alias/cornerstone-root-ca
+alias_name = "cornerstone-root-ca"
+
+# Principals allowed to sign and back up certificates.
+# Leave empty to manage access through IAM policies instead.
+# signer_principal_arns = ["arn:aws:iam::111122223333:user/alice"]
+
+# tags = { Owner = "platform" }

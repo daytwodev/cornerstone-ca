@@ -1,0 +1,35 @@
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Never commit real variable values or backend configuration.
+*.tfvars
+!*.tfvars.example
+backend.hcl
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+
+# Generated ceremony artifacts (public, but not versioned).
+*.crt
+*.csr
+*.key
