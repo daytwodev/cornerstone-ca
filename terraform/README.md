@@ -27,6 +27,18 @@ terraform plan
 # terraform apply   # only when you actually intend to create the root
 ```
 
+## Dedicated account
+
+To deploy into a dedicated AWS account (recommended for a root of trust),
+create that account and a deploy role outside this repository, then set
+`assume_role_arn` to that role. Keep account IDs, role ARNs, and the account
+bootstrap (SCPs, baseline IAM, CI roles) out of this repo: put them in a
+private ops repository and pass the values through `terraform.tfvars`
+(gitignored).
+
+The backend still uses the credentials that run Terraform; only resource
+operations go to the assumed account.
+
 ## Protections
 
 - `lifecycle { prevent_destroy = true }` on `aws_kms_key` and

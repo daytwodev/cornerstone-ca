@@ -8,4 +8,7 @@ alias_name = "cornerstone-root-ca"
 # Leave empty to manage access through IAM policies instead.
 # signer_principal_arns = ["arn:aws:iam::111122223333:user/alice"]
 
+# Optional: assume a role to deploy into a dedicated account.
+# assume_role_arn = "arn:aws:iam::111122223333:role/ExampleDeploy"
+
 # tags = { Owner = "platform" }
