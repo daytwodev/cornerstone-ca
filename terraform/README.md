@@ -32,10 +32,10 @@ terraform plan
 - `lifecycle { prevent_destroy = true }` on `aws_kms_key` and
   `aws_s3_bucket`: `terraform destroy` fails instead of deleting the root.
 - Key policy `ProtectRootKey`: denies `kms:ScheduleKeyDeletion`,
-  `kms:PutKeyPolicy`, `kms:DisableKey`, and `kms:DeleteAlias` to every
-  principal (including the account root). Denying `kms:PutKeyPolicy` also
-  makes the key policy immutable through the AWS API, so the deny cannot be
-  removed without AWS Support. This raises the bar; it is not absolute.
+  `kms:DisableKey`, and `kms:DeleteAlias` to every principal (including the
+  account root), so the key cannot be deleted or disabled by accident. The
+  policy stays editable. A key policy cannot protect the key from the
+  account's own administrators; use Organizations SCPs for that.
 - Backup bucket: versioning enabled, SSE `AES256`, `block_public_*` set to
   true, S3 Object Ownership enforced, and a policy that requires TLS
   (`aws:SecureTransport`).
@@ -66,8 +66,8 @@ terraform plan
 - `AllowSigningPrincipals` (optional): `kms:Sign`, `kms:Verify`, and
   `kms:GetPublicKey` for the listed ARNs. `kms:DescribeKey` is not needed:
   the key check comes from the `GetPublicKey` response.
-- `ProtectRootKey`: denies deletion, disabling, policy changes, and alias
-  deletion of the CMK.
+- `ProtectRootKey`: denies deletion, disabling, and alias deletion of the
+  CMK.
 
 `enable_key_rotation` is `false` because KMS does not support rotation for
 asymmetric keys. The bucket uses SSE-S3 (`AES256`) because the CMK is

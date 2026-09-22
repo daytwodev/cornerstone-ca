@@ -70,17 +70,17 @@ data "aws_iam_policy_document" "root_ca_key" {
     }
   }
 
-  # No principal, not even the account root, can delete or disable the CMK.
-  # Denying kms:PutKeyPolicy also makes this policy itself immutable, so the
-  # protection cannot be removed through the API (only AWS Support can reset
-  # a customer-managed key policy). That is intentional for a root of trust.
+  # No principal, not even the account root, can delete, disable, or remove
+  # the alias of the CMK. This protects the key from accidental/irreversible
+  # destruction. A key policy cannot protect the key from the account's own
+  # administrators (whoever can kms:PutKeyPolicy controls the key); use
+  # Organizations SCPs for that.
   statement {
     sid    = "ProtectRootKey"
     effect = "Deny"
 
     actions = [
       "kms:ScheduleKeyDeletion",
-      "kms:PutKeyPolicy",
       "kms:DisableKey",
       "kms:DeleteAlias",
     ]

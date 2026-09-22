@@ -74,10 +74,11 @@ Root protections:
 - `lifecycle { prevent_destroy = true }` on the CMK and the bucket (Terraform
   cannot destroy them).
 - Key policy `ProtectRootKey`: denies `kms:ScheduleKeyDeletion`,
-  `kms:PutKeyPolicy`, `kms:DisableKey`, and `kms:DeleteAlias` to everyone,
-  including the account root. Denying `PutKeyPolicy` also makes the policy
-  itself immutable through the API (only AWS Support can reset it). This
-  raises the bar; it is not a mathematical guarantee.
+  `kms:DisableKey`, and `kms:DeleteAlias` to everyone, including the account
+  root, so the key cannot be deleted or disabled by accident. The policy stays
+  editable. A key policy cannot protect the key from the account's own
+  administrators (whoever can `kms:PutKeyPolicy` controls it); use
+  Organizations SCPs for that.
 - Backup bucket: versioning, SSE (AES256), public access blocked, and S3
   Object Ownership enforced.
 
