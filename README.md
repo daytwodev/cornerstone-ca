@@ -48,12 +48,36 @@ cornerstone-ca/
 
 ## Requirements
 
-- Python >= 3.9 with `boto3` and `cryptography >= 42` (`pip install -e .`).
+- Python >= 3.9 with `boto3` and `cryptography >= 42`.
 - `openssl` (only to verify/inspect; the CLI does not use it).
 - An asymmetric RSA-4096 `SIGN_VERIFY` CMK (created by the Terraform) and
   `kms:Sign` + `kms:GetPublicKey` permission on it. When the key is loaded,
   Cornerstone verifies it is `SIGN_VERIFY`, RSA-4096, and supports
   `RSASSA_PKCS1_V1_5_SHA_256`; it fails fast otherwise.
+
+## Installation
+
+Cornerstone is Python, so there is no native compilation: it installs as a
+console script named `cornerstone`. Pick one:
+
+```bash
+# Isolated install (recommended for a CLI; no venv to manage):
+pipx install .
+pipx install git+https://github.com/daytwodev/cornerstone-ca
+
+# Editable install in your user site (points at the repo source):
+python3 -m pip install --user -e .
+
+# Or run it without installing (from the repo root):
+python3 -m cornerstone --help
+```
+
+A `--user` install drops the script in `~/.local/bin`; keep that directory on
+your `PATH`. For development: `python3 -m pip install -e ".[test]"` then
+`python3 -m pytest -q`.
+
+A single self-contained binary (no Python on the target machine) is possible
+with PyInstaller, but it is not needed for normal use.
 
 ## Terraform
 
