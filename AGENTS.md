@@ -66,3 +66,10 @@ CI (`.github/workflows/ci.yml`) runs the same on Python 3.9/3.12/3.13.
   `-backend-config=backend.hcl`; `plan`/`apply`/`destroy` never do.
 - KMS keys are per-account and per-region, and their material is not
   exportable.
+
+## Status
+
+Released `v0.1.0`. CI (`pytest` + `terraform validate`) and Dependabot are
+enabled. This repo stays **generic** on purpose: concrete deployments (AWS
+account IDs, KMS key ARNs, the specific Root CA, state bucket) are kept out of
+it.
