@@ -72,3 +72,36 @@ terraform plan
 `enable_key_rotation` is `false` because KMS does not support rotation for
 asymmetric keys. The bucket uses SSE-S3 (`AES256`) because the CMK is
 `SIGN_VERIFY` and cannot encrypt.
+
+## Destroying
+
+The root is intentionally hard to delete:
+
+- `lifecycle { prevent_destroy = true }` on the KMS key and the S3 bucket.
+- The key policy `ProtectRootKey` denies `kms:ScheduleKeyDeletion`,
+  `kms:DisableKey`, and `kms:DeleteAlias` to everyone, including the account
+  root.
+
+Teardown is Terraform-only. Edit `main.tf` to lift the protections, then apply
+and destroy:
+
+1. Remove the two `lifecycle { prevent_destroy = true }` blocks (KMS key and
+   bucket), set `force_destroy = true` on the bucket, and remove the
+   `ProtectRootKey` statement from the key policy.
+2. `terraform apply` (drops the deny) and `terraform destroy` (purges and
+   deletes the versioned bucket, and schedules the KMS key deletion).
+
+The bucket ships with `force_destroy = false`, so if you forget to set it to
+`true` the destroy fails with `BucketNotEmpty` (safe) instead of emptying it.
+Deleting the key is irreversible once the KMS deletion window passes
+(`aws kms cancel-key-deletion` reverses it during the window); after that, no
+new Intermediate CA can be signed, though existing certificates stay valid as
+trust anchors.
+
+The state bucket lives outside this root, so delete it last with the
+`terraform-state-bootstrap` tool (a separate repository):
+
+```bash
+# from https://github.com/daytwodev/terraform-state-bootstrap
+./bootstrap.sh destroy --bucket <name>-tfstate-<account> --yes
+```

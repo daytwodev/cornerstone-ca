@@ -82,6 +82,9 @@ Root protections:
 - Backup bucket: versioning, SSE (AES256), public access blocked, and S3
   Object Ownership enforced.
 
+To tear the infrastructure down on purpose, see
+[terraform/README.md](terraform/README.md#destroying).
+
 The default alias is `alias/cornerstone-root-ca`, which is also the CLI
 `--key-id` default. Outputs: `kms_key_id`, `kms_key_arn`, `kms_alias_name`,
 `kms_alias_arn`, `certificate_bucket_name`, `certificate_bucket_arn`.

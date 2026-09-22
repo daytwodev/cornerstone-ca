@@ -75,6 +75,10 @@ data "aws_iam_policy_document" "root_ca_key" {
   # destruction. A key policy cannot protect the key from the account's own
   # administrators (whoever can kms:PutKeyPolicy controls the key); use
   # Organizations SCPs for that.
+  #
+  # To tear the stack down, remove this statement and the prevent_destroy
+  # lifecycle blocks, set force_destroy = true on the bucket, then
+  # `terraform apply` + `terraform destroy`. See README.
   statement {
     sid    = "ProtectRootKey"
     effect = "Deny"
@@ -100,6 +104,11 @@ resource "aws_s3_bucket" "certificates" {
 
   bucket = "${var.name}-certificates-${local.account_id}"
   tags   = local.tags
+
+  # Keep false. force_destroy only matters after prevent_destroy is removed;
+  # the documented teardown sets it to true so Terraform can empty the
+  # versioned bucket.
+  force_destroy = false
 
   lifecycle {
     prevent_destroy = true
